@@ -1,0 +1,26 @@
+[project]
+name = "blego"
+version = "0.1.0"
+description = "A Python project named blego."
+authors = [
+    { name = "Petr Jindra", email = "el.mordo@gmail.com" }
+]
+license = { file = "LICENSE" }
+repository = "https://github.com/elmordo/blego"
+homepage = "https://github.com/elmordo/blego"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0"
+]
+
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
