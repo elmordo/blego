@@ -6,11 +6,13 @@ authors = [
     { name = "Petr Jindra", email = "el.mordo@gmail.com" }
 ]
 license = { file = "LICENSE" }
-repository = "https://github.com/elmordo/blego"
-homepage = "https://github.com/elmordo/blego"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = []
+
+[project.urls]
+repository = "https://github.com/elmordo/blego"
+homepage = "https://github.com/elmordo/blego"
 
 [project.optional-dependencies]
 dev = [
