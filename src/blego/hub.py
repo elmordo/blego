@@ -21,3 +21,44 @@
 # SOFTWARE.
 
 from __future__ import annotations
+
+from enum import Enum, auto
+
+from blego.message.enums import DeviceTypeID
+
+
+class LegoHub:
+    pass
+
+
+class Port:
+
+    def __init__(self, idx: int):
+        self._idx = idx
+        self._kind = PortKind.PHYSICAL if idx < 50 else PortKind.VIRTUAL
+        self._status = PortStatus.UNKNOWN
+        self._attached_device: DeviceTypeID = None
+
+    @property
+    def idx(self) -> int:
+        return self._idx
+
+    @property
+    def kind(self) -> PortKind:
+        return self._kind
+
+    @property
+    def status(self) -> PortStatus:
+        return self._status
+
+
+class PortStatus(Enum):
+    ATTACHED = auto()
+    DETACHED = auto()
+    UNKNOWN = auto()
+    """The status was not checked yet"""
+
+
+class PortKind(Enum):
+    VIRTUAL = auto()
+    PHYSICAL = auto()
