@@ -24,11 +24,20 @@ from __future__ import annotations
 
 from enum import Enum, auto
 
+from bleak import BleakClient
+
 from blego.message.enums import DeviceTypeID
 
 
 class LegoHub:
-    pass
+
+    def __init__(self, name: str, client: BleakClient):
+        self._name = name
+        self._ports = []
+
+    @property
+    def name(self) -> str:
+        return self._name
 
 
 class Port:
@@ -37,7 +46,7 @@ class Port:
         self._idx = idx
         self._kind = PortKind.PHYSICAL if idx < 50 else PortKind.VIRTUAL
         self._status = PortStatus.UNKNOWN
-        self._attached_device: DeviceTypeID = None
+        self._attached_device_type: DeviceTypeID | None = None
 
     @property
     def idx(self) -> int:
@@ -50,6 +59,10 @@ class Port:
     @property
     def status(self) -> PortStatus:
         return self._status
+
+    @property
+    def attached_device_type(self) -> DeviceTypeID | None:
+        return self._attached_device_type
 
 
 class PortStatus(Enum):
