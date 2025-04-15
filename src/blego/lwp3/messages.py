@@ -22,4 +22,27 @@
 
 from __future__ import annotations
 
-from .messages import *  # export # noqa
+from abc import ABC, abstractmethod
+
+from .enums import MessageType
+
+
+class Message(ABC):
+
+    @abstractmethod
+    def get_type(self) -> MessageType:
+        pass
+
+
+class HubMessage(Message, ABC):
+
+    @abstractmethod
+    def encode(self) -> bytes:
+        pass
+
+
+class PortMessage(Message, ABC):
+
+    @abstractmethod
+    def encode(self, port_id: int) -> bytes:
+        pass
