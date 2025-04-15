@@ -26,7 +26,7 @@ from enum import Enum, auto
 
 from bleak import BleakClient
 
-from blego.message.enums import DeviceTypeID
+from blego.lwp3.enums import DeviceTypeID
 
 
 class LegoHub:
