@@ -30,7 +30,7 @@ from .enums import MessageType
 class Message(ABC):
 
     @abstractmethod
-    def get_type(self) -> MessageType:
+    def get_message_type(self) -> MessageType:
         pass
 
 
@@ -41,8 +41,192 @@ class HubMessage(Message, ABC):
         pass
 
 
+class HubProperties(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.HUB_PROPERTIES
+
+    def encode(self) -> bytes:
+        raise NotImplementedError()
+
+
+class HubActions(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.HUB_ACTIONS
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class HubAlerts(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.HUB_ALERTS
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class HubAttachedIO(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.HUB_ATTACHED_IO
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class GenericErrorMessages(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.GENERIC_ERROR_MESSAGES
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class HWNetworkCommands(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.HW_NETWORK_COMMANDS
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class FWUpdateBootMode(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.FW_UPDATE_BOOT_MODE
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class FWUpdateLockMemory(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.FW_UPDATE_LOCK_MEMORY
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class FWUpdateLockStatusRequest(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.FW_UPDATE_LOCK_STATUS_REQUEST
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
+class FWLockStatus(HubMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.FW_LOCK_STATUS
+
+    def encode(self) -> bytes:
+        raise NotImplementedError
+
+
 class PortMessage(Message, ABC):
 
     @abstractmethod
     def encode(self, port_id: int) -> bytes:
         pass
+
+
+class PortInfoRequest(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INFO_REQUEST
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortModeInfoRequest(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_MODE_INFO_REQUEST
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortInputFormatSetupSingle(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INPUT_FORMAT_SETUP_SINGLE
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortInputFormatSetupCombined(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INPUT_FORMAT_SETUP_COMBINED
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortInfo(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INFO
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortModeInfo(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_MODE_INFO
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortValueSingle(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_VALUE_SINGLE
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortValueCombined(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_VALUE_COMBINED
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortInputFormatSingle(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INPUT_FORMAT_SINGLE
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortInputFormatCombined(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_INPUT_FORMAT_COMBINED
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class VirtualPortSetup(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.VIRTUAL_PORT_SETUP
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortOutputCommand(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_OUTPUT_COMMAND
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
+
+
+class PortOutputCommandFeedback(PortMessage):
+    def get_message_type(self) -> MessageType:
+        return MessageType.PORT_OUTPUT_COMMAND_FEEDBACK
+
+    def encode(self, port_id: int) -> bytes:
+        raise NotImplementedError
