@@ -9,7 +9,7 @@ license = { file = "LICENSE" }
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
-    "blea>=0.22.3"
+    "bleak>=0.22.3,<0.23"
 ]
 
 [project.urls]
@@ -17,7 +17,7 @@ repository = "https://github.com/elmordo/blego"
 homepage = "https://github.com/elmordo/blego"
 
 [project.optional-dependencies]
-dev = [
+test = [
     "pytest>=7.0",
     "pytest-cov>=4.0"
 ]
