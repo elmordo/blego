@@ -22,6 +22,31 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
+
+@dataclass()
+class RawMessageData:
+    message_length: int
+    message_type: int
+    payload: bytes
+
+    @classmethod
+    def from_bytes(cls, msg: bytes) -> RawMessageData:
+        message_length = decode_length(msg)
+        if message_length < 128:
+            # length encoded in the first byte
+            message_type = msg[2]
+            payload = msg[3:]
+        else:
+            # length encoded in the first and second byte
+            message_type = msg[3]
+            payload = msg[4:]
+        return cls(message_length, message_type, payload)
+
+    def to_bytes(self) -> bytes:
+        return encode_length(self.message_length) + bytes([0]) + bytes([self.message_type]) + self.payload
+
 
 def encode_length(l: int) -> bytes:
     if l < 128:
