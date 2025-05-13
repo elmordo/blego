@@ -19,3 +19,17 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import asyncio
+from asyncio import run
+
+from blego.hub import HubScanner
+
+
+async def main():
+    scanner = HubScanner()
+    await scanner.start()
+    await asyncio.sleep(10)
+
+
+if __name__ == '__main__':
+    asyncio.run(main())

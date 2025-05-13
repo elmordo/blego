@@ -24,12 +24,30 @@ from __future__ import annotations
 
 from enum import Enum, auto
 
+import bleak
 from bleak import BleakClient
 
 from blego.lwp3.enums import DeviceTypeID
 
 
+class HubScanner:
+
+    def __init__(self):
+        self._scanner = bleak.BleakScanner(self._detected, [LegoHub.SERVICE_UUID])
+
+    async def start(self):
+        await self._scanner.start()
+
+    async def stop(self):
+        await self._scanner.stop()
+
+    def _detected(self, device, advertisement_data):
+        print(device, advertisement_data)
+
+
 class LegoHub:
+
+    SERVICE_UUID = "00001623-1212-efde-1623-785feabcd123"
 
     def __init__(self, name: str, client: BleakClient):
         self._name = name
