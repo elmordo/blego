@@ -100,6 +100,11 @@ class AdvertisedHub:
     device: BLEDevice
     data: AdvertisementData
 
+    def gather_hub(self) -> LegoHub:
+        client = BleakClient(self.device)
+        hub = LegoHub(self.device.name, client)
+        return hub
+
 
 class LegoHub:
 
@@ -107,7 +112,21 @@ class LegoHub:
 
     def __init__(self, name: str, client: BleakClient):
         self._name = name
+        self._client = client
         self._ports = []
+
+    async def __aenter__(self):
+        await self.connect()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.disconnect()
+
+    async def connect(self):
+        return await self._client.connect()
+
+    async def disconnect(self):
+        return await self._client.disconnect()
 
     @property
     def name(self) -> str:

@@ -27,8 +27,16 @@ from blego.hub import HubScanner
 
 async def main():
     scanner = HubScanner()
+    hubs = []
     async for d in await scanner.start(5):
-        print(d)
+        h = d.gather_hub()
+        hubs.append(h)
+        await h.connect()
+
+    await asyncio.sleep(3)
+
+    for h in hubs:
+        await h.disconnect()
 
 
 if __name__ == '__main__':
