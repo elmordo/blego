@@ -19,24 +19,43 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-import asyncio
+from bleak import BleakClient
 
-from blego_bt_server.scanner import HubScanner
-
-
-TIMEOUT = 5
-
-async def main():
-    """Creates an instance of the HubScanner and starts scanning for LEGO hubs.
-    When a LEGO hub is found, it is printed to the console.
-    """
-    scanner = HubScanner()
-    print(f"Searching for LEGO hubs for {TIMEOUT} seconds...")
-    async for advertised_hub in await scanner.start(5):
-        print("Hub found: ", advertised_hub)
-
-    print("Search completed.")
+from blego_bt_server.scanner import AdvertisedHub
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+class ConnectedHub:
+
+    SERVICE_UUID = "00001623-1212-efde-1623-785feabcd123"
+
+    def __init__(self, name: str, client: BleakClient):
+        self._name = name
+        self._client = client
+        self._ports = []
+        self.__connected = False
+
+    @classmethod
+    def from_advertised_hub(cls, advertised_hub: AdvertisedHub):
+        return cls(advertised_hub.device.name, BleakClient(advertised_hub.device))
+
+    async def __aenter__(self):
+        await self.connect()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.disconnect()
+
+    async def connect(self):
+        await self._client.connect()
+        self.__connected = True
+
+    async def disconnect(self):
+        await self._client.disconnect()
+        self.__connected = False
+
+    async def send_message(self, message: bytes):
+        await self._client.write_gatt_char(self.SERVICE_UUID, message)
+
+    @property
+    def name(self) -> str:
+        return self._name
