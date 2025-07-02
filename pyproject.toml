@@ -7,9 +7,9 @@ authors = [
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 dependencies = [
-    "bleak>=0.22.3,<0.23"
+    "bleak>=1.0.0,<2.0"
 ]
 
 [project.urls]
@@ -23,8 +23,5 @@ test = [
 ]
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools]
-package-dir = { "" = "src" }
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

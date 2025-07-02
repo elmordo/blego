@@ -19,3 +19,24 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import asyncio
+
+from blego.bt.scanner import HubScanner
+
+
+TIMEOUT = 5
+
+async def main():
+    """Creates an instance of the HubScanner and starts scanning for LEGO hubs.
+    When a LEGO hub is found, it is printed to the console.
+    """
+    scanner = HubScanner()
+    print(f"Searching for LEGO hubs for {TIMEOUT} seconds...")
+    async for advertised_hub in await scanner.start(5):
+        print("Hub found: ", advertised_hub)
+
+    print("Search completed.")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

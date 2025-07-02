@@ -1,3 +1,0 @@
-# Blego BT Server
-
-TODO

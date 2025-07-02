@@ -26,14 +26,11 @@ from enum import Enum
 
 from bleak import BleakClient
 
-from blego.hub import Port
-from blego_bt_server.constants import LEGO_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID
-from blego_bt_server.scanner import AdvertisedHub
+from .constants import LEGO_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID
+from .scanner import AdvertisedHub
 
 
 class ConnectedHub:
-
-    SERVICE_UUID = "00001623-1212-efde-1623-785feabcd123"
 
     def __init__(self, name: str, client: BleakClient):
         self._name = name
@@ -62,7 +59,7 @@ class ConnectedHub:
         self.__connected = False
 
     async def send_message(self, message: bytes):
-        await self._client.write_gatt_char(self.SERVICE_UUID, message)
+        await self._client.write_gatt_char(LEGO_SERVICE_UUID, message)
 
     @property
     def name(self) -> str:

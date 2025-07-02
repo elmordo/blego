@@ -28,7 +28,7 @@ from typing import AsyncIterable
 
 from bleak import BLEDevice, AdvertisementData, BleakScanner
 
-from blego_bt_server.constants import LEGO_SERVICE_UUID
+from .constants import LEGO_SERVICE_UUID
 
 
 class HubScanner:
