@@ -490,7 +490,7 @@ class HWNetWorkCommand(IntEnum):
     """Reset Long Press Timing"""
 
 
-class PredefinedLedColour(IntEnum):
+class HWFamilyLedColour(IntEnum):
     """
     H/W Network Families Predefined LED Colors - matches UInt8 values to LED color codes.
     """
@@ -523,7 +523,7 @@ class PredefinedLedColour(IntEnum):
     """Family 8 - Pink"""
 
 
-class LedFlashes(IntEnum):
+class HWSubFamilyLedFlashes(IntEnum):
     """
     H/W Network Families (Flashes) - Defines flash patterns for sub-families.
     """
