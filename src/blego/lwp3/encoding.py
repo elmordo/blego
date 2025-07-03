@@ -40,3 +40,18 @@ def encode_message(message_type: MessageType, payload: bytes) -> bytes:
         lsb = length % 127
         msb = length // 127
         return bytes([0x80 | lsb, msb]) + without_length
+
+
+def decode_message(message: bytes) -> tuple[MessageType, bytes]:
+    """Decodes a message from a byte array."""
+    if len(message) < 3:
+        raise ValueError("Message is too short.")
+
+    if 0x80 & message[0]:
+        # the message is longer than 127 bytes
+        message_type = MessageType(message[3])
+        payload = message[4:]
+    else:
+        message_type = MessageType(message[2])
+        payload = message[3:]
+    return message_type, payload
