@@ -26,9 +26,11 @@ from enum import Enum
 
 from bleak import BleakClient
 
-from .constants import LEGO_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID
+from .constants import LEGO_CHARACTERISTIC_UUID
 from .scanner import AdvertisedHub
 from ..lwp3 import MessageType
+from ..lwp3.encoding import encode_message, decode_message
+from ..lwp3.enums import DeviceTypeID
 
 
 class ConnectedHub:
@@ -65,7 +67,7 @@ class ConnectedHub:
         Args:
             payload: Data to be sent to LEGO hub.
         """
-        await self._client.write_gatt_char(LEGO_SERVICE_UUID, payload)
+        await self._client.write_gatt_char(LEGO_CHARACTERISTIC_UUID, payload)
 
     async def send_message_bytes(self, message_type: MessageType, payload: bytes):
         """Send a message to LEGO hub.
@@ -74,20 +76,25 @@ class ConnectedHub:
             message_type: Type of message to be sent to LEGO hub.
             payload: Message payload to be sent to LEGO hub.
         """
+        message = encode_message(message_type, payload)
+        await self.send_bytes(message)
 
 
     @property
     def name(self) -> str:
         return self._name
 
-    def _handle_notification(self, sender, data):
-        if data[2] == 0x04:
+    def get_ports_with_devices(self, device_ids: list[DeviceTypeID]) -> list[int]:
+        return [pid for pid, did in self._ports.items() if did in device_ids]
+
+    def _handle_notification(self, _sender, data):
+        message_type, payload = decode_message(data)
+        if message_type is MessageType.HUB_ATTACHED_IO:
             # attach/detach of device
-            port_id = data[3]
-            operation = DeviceOperationType(data[4])
-            device_type_id = data[5]
+            port_id = payload[0]
+            operation = DeviceOperationType(payload[1])
+            device_type_id = payload[2]
             self._handle_device_change(port_id, operation, device_type_id)
-        print(data[2], data[3], data[4], data[5])
 
     def _handle_device_change(self, port_id: int, operation: DeviceOperationType, device_type_id: int):
         if operation is DeviceOperationType.DETACH:
@@ -97,7 +104,7 @@ class ConnectedHub:
                 # TODO: Log
                 pass
         else:
-            self._ports[port_id] = device_type_id
+            self._ports[port_id] = DeviceTypeID(device_type_id)
 
 
 class DeviceOperationType(Enum):

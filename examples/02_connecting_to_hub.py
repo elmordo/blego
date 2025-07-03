@@ -24,7 +24,8 @@ from asyncio import sleep
 
 from blego.bt.connection import ConnectedHub
 from blego.bt.scanner import HubScanner
-
+from blego.lwp3 import MessageType
+from blego.lwp3.enums import DeviceTypeID
 
 TIMEOUT = 5
 
@@ -48,6 +49,17 @@ async def main():
     print("Hub connected.")
 
     async with hub:
+        await sleep(2)
+        try:
+            led_port = hub.get_ports_with_devices([DeviceTypeID.POWERED_UP_HUB_INDICATOR_LIGHT])[0]
+        except IndexError:
+            print("Hub does not have an indicator LED.")
+            exit(1)
+        print("Sending message to hub")
+        await hub.send_message_bytes(MessageType.PORT_INPUT_FORMAT_SETUP_SINGLE, bytes([led_port, 0, 1, 1]))
+        msg_type = MessageType.PORT_OUTPUT_COMMAND
+        payload = bytes([led_port, 0b00010000, 0x01, 5, 255, 0])
+        await hub.send_message_bytes(msg_type, payload)
         await sleep(2)
         print("Disconnecting from hub...")
     print("Hub disconnected.")
