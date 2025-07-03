@@ -28,6 +28,7 @@ from bleak import BleakClient
 
 from .constants import LEGO_SERVICE_UUID, LEGO_CHARACTERISTIC_UUID
 from .scanner import AdvertisedHub
+from ..lwp3 import MessageType
 
 
 class ConnectedHub:
@@ -58,8 +59,22 @@ class ConnectedHub:
         await self._client.disconnect()
         self.__connected = False
 
-    async def send_message(self, message: bytes):
-        await self._client.write_gatt_char(LEGO_SERVICE_UUID, message)
+    async def send_bytes(self, payload: bytes):
+        """Send payload to LEGO hub "as is".
+
+        Args:
+            payload: Data to be sent to LEGO hub.
+        """
+        await self._client.write_gatt_char(LEGO_SERVICE_UUID, payload)
+
+    async def send_message_bytes(self, message_type: MessageType, payload: bytes):
+        """Send a message to LEGO hub.
+
+        Args:
+            message_type: Type of message to be sent to LEGO hub.
+            payload: Message payload to be sent to LEGO hub.
+        """
+
 
     @property
     def name(self) -> str:

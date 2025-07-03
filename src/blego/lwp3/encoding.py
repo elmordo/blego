@@ -22,41 +22,21 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from blego.lwp3 import MessageType
 
 
-@dataclass()
-class RawMessageData:
-    message_length: int
-    message_type: int
-    payload: bytes
+def encode_message(message_type: MessageType, payload: bytes) -> bytes:
+    """Encodes a message into a byte array."""
+    without_length = bytes([
+        0x00, # always zero
+        message_type.value  # message payload
+    ]) + payload
 
-    @classmethod
-    def from_bytes(cls, msg: bytes) -> RawMessageData:
-        message_length = decode_length(msg)
-        if message_length < 128:
-            # length encoded in the first byte
-            message_type = msg[2]
-            payload = msg[3:]
-        else:
-            # length encoded in the first and second byte
-            message_type = msg[3]
-            payload = msg[4:]
-        return cls(message_length, message_type, payload)
-
-    def to_bytes(self) -> bytes:
-        return encode_length(self.message_length) + bytes([0]) + bytes([self.message_type]) + self.payload
-
-
-def encode_length(l: int) -> bytes:
-    if l < 128:
-        return bytes([l])
+    if len(without_length) < 127:
+        # the extra one is for the "length byte"
+        return bytes([len(without_length) + 1]) + without_length
     else:
-        return bytes([(l & 0xFF) | 0x80, (l >> 7) & 0xFF])
-
-
-def decode_length(msg: bytes) -> int:
-    if msg[0] & 0xF0 == 0:
-        return msg[0]
-    else:
-        return (msg[0] & 0x7F) | (msg[1] << 7)
+        length = len(without_length) + 2  # 2 is stands for 2 bytes of length
+        lsb = length % 127
+        msb = length // 127
+        return bytes([0x80 | lsb, msb]) + without_length

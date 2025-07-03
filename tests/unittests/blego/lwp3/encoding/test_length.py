@@ -5,30 +5,32 @@ __copyright__ = "Copyright (c) 2025 MIL Innovation A/S. All Rights Reserved."
 
 import pytest
 
-from blego.lwp3.encoding import encode_length, decode_length
+from blego.lwp3 import MessageType
+from blego.lwp3.encoding import encode_message
 
 
 @pytest.mark.parametrize(
-    "data, expected",
+    "payload_length, expected_encoded_length",
     [
-        (1, bytes([0b0000_0001])),
-        (128, bytes([0b1000_0000, 0b0000_0001])),
-        (129, bytes([0b1000_0001, 0b0000_0001])),
-        (130, bytes([0b1000_0010, 0b0000_0001])),
-    ],
+        (0, b"\x03"),  # empty payload. the total length of the message is 3
+        (1, b"\x04"),  # one byte. the total length of the message is 4
+        (2, b"\x05"),  # two bytes. the total length of the message is 5
+        (124, b"\x7f"),  # the biggest payload encoded by 1 byte. the total length of the message is 127
+        (125, b"\x82\x01"),  # the smallest payload encoded by 2 bytes. the total length of the message is 129
+        (126, b"\x83\x01"),  # payload encoded by two bytes. the total length of the message is 130
+    ]
 )
-def test_encode_length(data, expected):
-    assert encode_length(data) == expected, f"Expected {expected} but got {encode_length(data)}"
+def test_encode_message(payload_length, expected_encoded_length):
+    """Test message length encoding.
 
+    Note:
+        I am not sure if messages longer than 127 bytes are encoded correctly.
+    """
+    payload = b'a' * payload_length
+    expected = expected_encoded_length + b"\x00\x01" + payload
 
-@pytest.mark.parametrize(
-    "expected, data",
-    [
-        (1, bytes([0b0000_0001])),
-        (128, bytes([0b1000_0000, 0b0000_0001])),
-        (129, bytes([0b1000_0001, 0b0000_0001])),
-        (130, bytes([0b1000_0010, 0b0000_0001])),
-    ],
-)
-def test_decode_length(data, expected):
-    assert decode_length(data) == expected, f"Expected {expected} but got {decode_length(data)}"
+    encoded = encode_message(
+        MessageType(0x01),  # randomly chosen message type
+        payload
+    )
+    assert encoded == expected
