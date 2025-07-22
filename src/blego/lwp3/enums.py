@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 from enum import IntEnum
+from typing import Self
 
 
 class MessageType(IntEnum):
@@ -413,6 +414,25 @@ class DeviceTypeID(IntEnum):
 
     POWERED_UP_HUB_UNKNOWN = 0x5E
     """Powered Up hub unknown (GEST_BITMAP)"""
+
+    @classmethod
+    @property
+    def motors(cls) -> set[Self]:
+        return {
+            cls.POWERED_UP_MEDIUM_MOTOR,
+            cls.POWERED_UP_TRAIN_MOTOR,
+            cls.BOOST_INTERACTIVE_MOTOR,
+            cls.BOOST_MOVE_HUB_BUILT_IN_MOTOR,
+            cls.DUPLO_TRAIN_HUB_BUILT_IN_MOTOR,
+            cls.TECHNIC_CONTROL_PLUS_LARGE_MOTOR,
+            cls.TECHNIC_CONTROL_PLUS_XL_MOTOR,
+            cls.SPIKE_PRIME_MEDIUM_MOTOR,
+            cls.SPIKE_PRIME_LARGE_MOTOR,
+            cls.TECHNIC_MEDIUM_ANGULAR_MOTOR_GRAY,
+            cls.TECHNIC_LARGE_ANGULAR_MOTOR_GRAY,
+            cls.TECHNIC_MOVE_HUB_DRIVE_MOTOR,
+            cls.TECHNIC_MOVE_HUB_STEERING_MOTOR,
+        }
 
 
 class ErrorCode(IntEnum):
