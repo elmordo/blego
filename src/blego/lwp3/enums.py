@@ -646,3 +646,18 @@ class PossibleModeCombination(IntEnum):
         :return: True if it matches one of the predefined modes, otherwise False.
         """
         return mode in {item.value for item in PossibleModeCombination}
+
+
+class Color(IntEnum):
+    BLACK = 0
+    PINK = 1
+    PURPLE = 2
+    BLUE = 3
+    LIGHTBLUE = 4
+    CYAN = 5
+    GREEN = 6
+    YELLOW = 7
+    ORANGE = 8
+    RED = 9
+    WHITE = 10
+    NONE = 11
