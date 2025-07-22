@@ -23,6 +23,7 @@
 from __future__ import annotations
 
 from enum import Enum
+from typing import Collection
 
 from bleak import BleakClient
 
@@ -84,7 +85,7 @@ class ConnectedHub:
     def name(self) -> str:
         return self._name
 
-    def get_ports_with_devices(self, device_ids: list[DeviceTypeID]) -> list[int]:
+    def get_ports_with_devices(self, device_ids: Collection[DeviceTypeID]) -> list[int]:
         return [pid for pid, did in self._ports.items() if did in device_ids]
 
     def _handle_notification(self, _sender, data):
